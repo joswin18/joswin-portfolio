@@ -146,7 +146,7 @@ const Portfolio = () => {
           <section id="home" className="min-h-screen flex items-center justify-center">
             <div className="text-center space-y-6">
               <h1 className="text-6xl font-bold">
-                Hello, I'm <span className="text-blue-600 dark:text-blue-400">John Doe</span>
+                Hello, I'm <span className="text-blue-600 dark:text-blue-400">Joswin</span>
               </h1>
               <p className="text-xl text-neutral-600 dark:text-neutral-400">
                 Full Stack Developer
