@@ -178,7 +178,7 @@ const Portfolio = () => {
                 </div>
                 <div className="p-4 bg-neutral-100 dark:bg-neutral-900 rounded-lg">
                   <h3 className="font-bold">Tools</h3>
-                  <p className="text-neutral-600 dark:text-neutral-400">Git, Docker</p>
+                  <p className="text-neutral-600 dark:text-neutral-400">Heroku, Netlify, AWS, Firebase, Git, Docker, GitHub</p>
                 </div>
               </div>
             </div>
