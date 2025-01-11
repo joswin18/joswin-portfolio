@@ -170,7 +170,7 @@ const Portfolio = () => {
                 </div>
                 <div className="p-4 bg-neutral-100 dark:bg-neutral-900 rounded-lg">
                   <h3 className="font-bold">Backend</h3>
-                  <p className="text-neutral-600 dark:text-neutral-400">Node.js, Python</p>
+                  <p className="text-neutral-600 dark:text-neutral-400">Node.js, Express.js</p>
                 </div>
                 <div className="p-4 bg-neutral-100 dark:bg-neutral-900 rounded-lg">
                   <h3 className="font-bold">Database</h3>
