@@ -166,7 +166,7 @@ const Portfolio = () => {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="p-4 bg-neutral-100 dark:bg-neutral-900 rounded-lg">
                   <h3 className="font-bold">Frontend</h3>
-                  <p className="text-neutral-600 dark:text-neutral-400">React, Next.js</p>
+                  <p className="text-neutral-600 dark:text-neutral-400">React, Next.js, Redux, HTML, CSS, JavaScript</p>
                 </div>
                 <div className="p-4 bg-neutral-100 dark:bg-neutral-900 rounded-lg">
                   <h3 className="font-bold">Backend</h3>
