@@ -2,6 +2,9 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Menu, X, Github, Linkedin, Mail, ArrowUp, Moon, Sun } from 'lucide-react';
+import ParticleText from './ParticleText';
+import InteractiveParticleText from './InteractiveParticleText';
+
 
 const Portfolio = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -143,14 +146,13 @@ const Portfolio = () => {
         {/* Main Content */}
         <main className="pt-20">
           {/* Hero Section */}
-          <section id="home" className="min-h-screen flex items-center justify-center">
-            <div className="text-center space-y-6">
-              <h1 className="text-6xl font-bold">
-                Hello, I'm <span className="text-blue-600 dark:text-blue-400">Joswin</span>
-              </h1>
-              <p className="text-xl text-neutral-600 dark:text-neutral-400">
-                Full Stack Developer
-              </p>
+          <section className="hero">
+            <div className="hero-content">
+              {/* <h1>Welcome to My Portfolio</h1>
+              <p>I'm Joswin, a passionate software developer.</p> */}
+              <div className="relative h-[200px] w-full">
+                <InteractiveParticleText text="Joswin" />
+              </div>
             </div>
           </section>
 
