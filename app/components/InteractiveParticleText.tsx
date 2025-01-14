@@ -35,7 +35,7 @@ class ParticleTextEnvironment {
   constructor(container: HTMLElement, text: string) {
     this.container = container;
     this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(65, container.clientWidth / container.clientHeight, 1, 10000);
+    this.camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 1, 10000);
     this.camera.position.set(0, 0, 100);
 
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -53,7 +53,7 @@ class ParticleTextEnvironment {
       amount: 1500,
       particleSize: 1,
       particleColor: 0xffffff,
-      textSize: 16,
+      textSize: 18, // Reduced text size
       area: 250,
       ease: 0.05,
     };
@@ -63,14 +63,20 @@ class ParticleTextEnvironment {
 
   async init() {
     const textureLoader = new THREE.TextureLoader();
+    const fontLoader = new FontLoader();
 
     try {
-      this.font = await new Promise((resolve) => {
-        new FontLoader().load('/fonts/helvetiker_regular.typeface.json', resolve);
+      this.font = await new Promise((resolve, reject) => {
+        fontLoader.load(
+          'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/fonts/helvetiker_bold.typeface.json',
+          resolve,
+          undefined,
+          reject
+        );
       });
 
       this.particle = await new Promise((resolve) => {
-        textureLoader.load('https://res.cloudinary.com/dfvtkoboz/image/upload/v1605013866/particle_a64uzf.png', resolve);
+        textureLoader.load('/particle.png', resolve);
       });
 
       this.setup();
@@ -87,17 +93,17 @@ class ParticleTextEnvironment {
     const geometry = new TextGeometry(this.data.text, {
       font: this.font,
       size: this.data.textSize,
-      height: 0.1,
-      curveSegments: 40,
+      height: 0,
+      curveSegments: 12,
       bevelEnabled: false,
     });
 
     geometry.computeBoundingBox();
 
-    const xMid = -0.5 * (geometry.boundingBox!.max.x - geometry.boundingBox!.min.x);
-    const yMid = (geometry.boundingBox!.max.y - geometry.boundingBox!.min.y) / 2.85;
+    const centerOffset = -0.5 * (geometry.boundingBox!.max.x - geometry.boundingBox!.min.x);
+    const yOffset = -0.5 * (geometry.boundingBox!.max.y - geometry.boundingBox!.min.y);
 
-    const points = this.createPointsFromGeometry(geometry, xMid, yMid);
+    const points = this.createPointsFromGeometry(geometry, centerOffset, yOffset);
     this.particles = points;
     this.scene.add(points);
 
