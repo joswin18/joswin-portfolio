@@ -144,13 +144,13 @@ const Portfolio = () => {
         </nav>
 
         {/* Main Content */}
-        <main className="pt-20">
+        <main className="pt-16">
           {/* Hero Section */}
           <section className="hero">
             <div className="hero-content">
               {/* <h1>Welcome to My Portfolio</h1>
               <p>I'm Joswin, a passionate software developer.</p> */}
-              <div className="relative h-[200px] w-full">
+              <div className="relative h-[600px] w-full -mt-20 -mb-24">
                 <InteractiveParticleText text="Joswin" />
               </div>
             </div>
