@@ -148,7 +148,7 @@ const Portfolio = () => {
           <section className="hero">
             <div className="hero-content">
               <div className="relative h-[600px] w-full flex items-center justify-center">
-                <InteractiveParticleText text="JOSWIN P SATHEESH" />
+                <InteractiveParticleText text="Joswin P Satheesh" />
               </div>
             </div>
           </section>
