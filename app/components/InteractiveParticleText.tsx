@@ -73,7 +73,7 @@ class ParticleTextEnvironment {
 
     this.data = {
       text,
-      amount: 1500,
+      amount: 1000,
       particleSize: 1,
       particleColor: 0xffffff,
       textSize: 16,
