@@ -151,7 +151,7 @@ const Portfolio = () => {
               {/* <h1>Welcome to My Portfolio</h1>
               <p>I'm Joswin, a passionate software developer.</p> */}
               <div className="relative h-[600px] w-full -mt-20 -mb-24">
-                <InteractiveParticleText text="Joswin" />
+                <InteractiveParticleText text="JOSWIN P SATHEESH" />
               </div>
             </div>
           </section>
