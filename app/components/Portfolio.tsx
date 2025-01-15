@@ -2,7 +2,6 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Menu, X, Github, Linkedin, Mail, ArrowUp, Moon, Sun } from 'lucide-react';
-import ParticleText from './ParticleText';
 import InteractiveParticleText from './InteractiveParticleText';
 
 
@@ -148,9 +147,7 @@ const Portfolio = () => {
           {/* Hero Section */}
           <section className="hero">
             <div className="hero-content">
-              {/* <h1>Welcome to My Portfolio</h1>
-              <p>I'm Joswin, a passionate software developer.</p> */}
-              <div className="relative h-[600px] w-full -mt-20 -mb-24">
+              <div className="relative h-[600px] w-full flex items-center justify-center">
                 <InteractiveParticleText text="JOSWIN P SATHEESH" />
               </div>
             </div>
@@ -252,3 +249,4 @@ const Portfolio = () => {
 };
 
 export default Portfolio;
+
