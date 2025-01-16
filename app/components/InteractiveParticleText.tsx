@@ -6,6 +6,7 @@ import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 
 interface InteractiveParticleTextProps {
   text: string;
+  isDarkMode: boolean;
 }
 
 const vertexShader = `
@@ -54,8 +55,9 @@ class ParticleTextEnvironment {
     area: number;
     ease: number;
   };
+  isDarkMode: boolean;
 
-  constructor(container: HTMLElement, text: string) {
+  constructor(container: HTMLElement, text: string, isDarkMode: boolean) {
     this.container = container;
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(65, container.clientWidth / container.clientHeight, 1, 10000);
@@ -70,12 +72,13 @@ class ParticleTextEnvironment {
     this.mouse = new THREE.Vector2(-200, 200);
     this.colorChange = new THREE.Color();
     this.buttom = false;
+    this.isDarkMode = isDarkMode;
 
     this.data = {
       text,
       amount: 1000,
       particleSize: 1,
-      particleColor: 0xffffff,
+      particleColor: isDarkMode ? 0xffffff : 0xff0000,
       textSize: 16,
       area: 250,
       ease: 0.05,
@@ -187,7 +190,7 @@ class ParticleTextEnvironment {
         let py = pos.getY(i);
         let pz = pos.getZ(i);
 
-        this.colorChange.setHSL(.5, 1, 1);
+        this.colorChange.setHSL(this.isDarkMode ? 0 : 0, 1, this.isDarkMode ? 1 : 0.5);
         colors.setXYZ(i, this.colorChange.r, this.colorChange.g, this.colorChange.b);
         colors.needsUpdate = true;
 
@@ -293,6 +296,7 @@ class ParticleTextEnvironment {
     shapes.push.apply(shapes, holeShapes);
 
     let colors: number[] = [];
+    this.colorChange.setHSL(this.isDarkMode ? 0 : 0, 1, this.isDarkMode ? 1 : 0.5);
     let sizes: number[] = [];
 
     for (let x = 0; x < shapes.length; x++) {
@@ -354,6 +358,19 @@ class ParticleTextEnvironment {
     return Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
   }
 
+  updateParticleColors() {
+    if (!this.particles) return;
+
+    const colors = this.particles.geometry.attributes.customColor;
+    this.colorChange.setHSL(this.isDarkMode ? 0 : 0, 1, this.isDarkMode ? 1 : 0.5);
+
+    for (let i = 0; i < colors.count; i++) {
+      colors.setXYZ(i, this.colorChange.r, this.colorChange.g, this.colorChange.b);
+    }
+
+    colors.needsUpdate = true;
+  }
+
   dispose() {
     this.particles?.geometry.dispose();
     (this.particles?.material as THREE.Material)?.dispose();
@@ -362,19 +379,24 @@ class ParticleTextEnvironment {
   }
 }
 
-const InteractiveParticleText: React.FC<InteractiveParticleTextProps> = ({ text }) => {
+const InteractiveParticleText: React.FC<InteractiveParticleTextProps> = ({ text, isDarkMode }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const environmentRef = useRef<ParticleTextEnvironment | null>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
 
-    environmentRef.current = new ParticleTextEnvironment(containerRef.current, text);
+    if (!environmentRef.current) {
+      environmentRef.current = new ParticleTextEnvironment(containerRef.current, text, isDarkMode);
+    } else {
+      environmentRef.current.isDarkMode = isDarkMode;
+      environmentRef.current.updateParticleColors();
+    }
 
     return () => {
       environmentRef.current?.dispose();
     };
-  }, [text]);
+  }, [text, isDarkMode]);
 
   return (
     <div className="particle-text-container">
