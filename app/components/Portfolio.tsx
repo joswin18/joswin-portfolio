@@ -147,15 +147,14 @@ const Portfolio = () => {
           {/* Hero Section */}
           <section className="hero">
             <div className="hero-content">
-              <div className="relative h-[600px] w-full flex items-center justify-center">
+              <div className="relative h-[400px] w-full flex items-center justify-center pt-24">
                 <InteractiveParticleText text="Joswin P Satheesh" isDarkMode={isDark} key={isDark.toString()} />
               </div>
             </div>
           </section>
 
           {/* About Section */}
-          <section id="about" className="min-h-screen flex items-center">
-            <div className="max-w-4xl mx-auto px-4 space-y-8">
+<section id="about" className="min-h-[calc(100vh-400px)] flex items-center py-16">            <div className="max-w-4xl mx-auto px-4 space-y-8">
               <h2 className="text-4xl font-bold">About Me</h2>
               <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed">
                 I'm a passionate developer with expertise in modern web technologies.
