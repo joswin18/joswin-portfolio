@@ -87,8 +87,8 @@ const Portfolio = () => {
                   <a
                     key={section.id}
                     href={`#${section.id}`}
-                    className={`hover:text-blue-600 dark:hover:text-blue-400 transition-colors ${
-                      activeSection === section.id ? 'text-blue-600 dark:text-blue-400' : ''
+                    className={`hover:text-red-500 dark:hover:text-violet-500 transition-colors ${
+                      activeSection === section.id ? 'text-red-500 dark:text-violet-500' : ''
                     }`}
                   >
                     {section.label}
@@ -131,7 +131,7 @@ const Portfolio = () => {
                   <a
                     key={section.id}
                     href={`#${section.id}`}
-                    className="block py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                    className="block py-2 hover:text-red-500 dark:hover:text-violet-500 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {section.label}
@@ -148,7 +148,7 @@ const Portfolio = () => {
           <section className="hero">
             <div className="hero-content">
               <div className="relative h-[600px] w-full flex items-center justify-center">
-                <InteractiveParticleText text="Joswin P Satheesh" />
+                <InteractiveParticleText text="Joswin P Satheesh" isDarkMode={isDark} key={isDark.toString()} />
               </div>
             </div>
           </section>
@@ -199,7 +199,7 @@ const Portfolio = () => {
                       {project.tags.map((tag, tagIndex) => (
                         <span
                           key={tagIndex}
-                          className="px-3 py-1 bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-full text-sm"
+                          className="bg-red-500/10 text-red-500 dark:bg-violet-500/10 dark:text-violet-500 rounded-full text-sm"
                         >
                           {tag}
                         </span>
@@ -219,13 +219,13 @@ const Portfolio = () => {
                 I'm always open to new opportunities and collaborations.
               </p>
               <div className="flex justify-center space-x-6">
-                <a href="#" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                <a href="#" className="hover:text-red-500 dark:hover:text-violet-500 transition-colors">
                   <Github size={24} />
                 </a>
-                <a href="#" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                <a href="#" className="hover:text-red-500 dark:hover:text-violet-500 transition-colors">
                   <Linkedin size={24} />
                 </a>
-                <a href="#" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                <a href="#" className="hover:text-red-500 dark:hover:text-violet-500 transition-colors">
                   <Mail size={24} />
                 </a>
               </div>
@@ -236,7 +236,7 @@ const Portfolio = () => {
         {/* Scroll to Top Button */}
         <button
           onClick={scrollToTop}
-          className={`fixed bottom-8 right-8 p-3 bg-blue-600 dark:bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-all duration-300 ${
+          className={`fixed bottom-8 right-8 p-3 bg-red-500 dark:bg-violet-500 text-white rounded-full shadow-lg hover:bg-red-500 dark:hover:bg-violet-800 transition-all duration-300 ${
             showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'
           }`}
           aria-label="Scroll to top"
