@@ -1,15 +1,26 @@
 "use client"
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Menu, X, Github, Linkedin, Mail, ArrowUp, Moon, Sun } from 'lucide-react';
+import { Menu, X, Github, Linkedin, Mail, ArrowUp, Moon, Sun, Star, GithubIcon } from 'lucide-react';
 import InteractiveParticleText from './InteractiveParticleText';
+import { fetchGitHubProjects } from '../utils/github';
 
+interface GitHubProject {
+  id: number;
+  name: string;
+  description: string;
+  url: string;
+  stars: number;
+  language: string;
+  topics: string[];
+}
 
 const Portfolio = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isDark, setIsDark] = useState(true);
   const [activeSection, setActiveSection] = useState('home');
+  const [githubProjects, setGithubProjects] = useState<GitHubProject[]>([]);
   const headerRef = useRef(null);
   const mainRef = useRef(null);
 
@@ -18,24 +29,6 @@ const Portfolio = () => {
     { id: 'about', label: 'About' },
     { id: 'projects', label: 'Projects' },
     { id: 'contact', label: 'Contact' }
-  ];
-
-  const projects = [
-    {
-      title: 'E-Commerce Platform',
-      description: 'Built with Next.js and TypeScript',
-      tags: ['Next.js', 'TypeScript', 'Tailwind']
-    },
-    {
-      title: 'Task Management App',
-      description: 'React-based productivity tool',
-      tags: ['React', 'Redux', 'Firebase']
-    },
-    {
-      title: 'Portfolio Website',
-      description: 'Minimalist design with animations',
-      tags: ['React', 'GSAP', 'Tailwind']
-    }
   ];
 
   useEffect(() => {
@@ -58,6 +51,12 @@ const Portfolio = () => {
     // Apply theme to document
     document.documentElement.classList.toggle('dark', isDark);
   }, [isDark]);
+
+  useEffect(() => {
+    // Fetch GitHub projects
+    const username = 'joswin18';
+    fetchGitHubProjects(username).then(setGithubProjects);
+  }, []);
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -154,7 +153,8 @@ const Portfolio = () => {
           </section>
 
           {/* About Section */}
-<section id="about" className="min-h-[calc(100vh-400px)] flex items-center py-16">            <div className="max-w-4xl mx-auto px-4 space-y-8">
+          <section id="about" className="min-h-[calc(100vh-400px)] flex items-center py-16">
+            <div className="max-w-6xl mx-auto px-4 space-y-8">
               <h2 className="text-4xl font-bold">About Me</h2>
               <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed">
                 I'm a passionate developer with expertise in modern web technologies.
@@ -187,23 +187,46 @@ const Portfolio = () => {
             <div className="max-w-6xl mx-auto px-4">
               <h2 className="text-4xl font-bold mb-12">Projects</h2>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {projects.map((project, index) => (
+                {githubProjects.map((project) => (
                   <div
-                    key={index}
-                    className="bg-neutral-100 dark:bg-neutral-900 p-6 rounded-lg hover:transform hover:-translate-y-2 transition-transform"
+                    key={project.id}
+                    className="bg-neutral-100 dark:bg-neutral-900 p-6 rounded-lg hover:shadow-lg transition-all duration-300"
                   >
-                    <h3 className="text-xl font-bold mb-2">{project.title}</h3>
+                    <h3 className="text-xl font-bold mb-2">{project.name}</h3>
                     <p className="text-neutral-600 dark:text-neutral-400 mb-4">{project.description}</p>
-                    <div className="flex flex-wrap gap-2">
-                      {project.tags.map((tag, tagIndex) => (
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {project.topics.map((topic, topicIndex) => (
                         <span
-                          key={tagIndex}
-                          className="bg-red-500/10 text-red-500 dark:bg-violet-500/10 dark:text-violet-500 rounded-full text-sm"
+                          key={topicIndex}
+                          className="px-2 py-1 bg-red-500/10 text-red-500 dark:bg-violet-500/10 dark:text-violet-500 rounded-full text-sm"
                         >
-                          {tag}
+                          {topic}
                         </span>
                       ))}
                     </div>
+                    <div className="flex items-center justify-between mt-4">
+                      <a 
+                        href={project.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="flex items-center text-neutral-700 dark:text-neutral-300 hover:text-red-500 dark:hover:text-violet-500 transition-colors"
+                      >
+                        <GithubIcon size={20} className="mr-2" />
+                        View on GitHub
+                      </a>
+                      <div className="flex items-center">
+                        <Star size={16} className="text-yellow-400 mr-1" />
+                        <span className="text-sm font-medium">{project.stars}</span>
+                      </div>
+                    </div>
+                    {project.language && (
+                      <div className="mt-4">
+                        <h4 className="text-sm font-semibold mb-2">Main Language:</h4>
+                        <span className="px-2 py-1 bg-neutral-200 dark:bg-neutral-700 rounded-full text-xs">
+                          {project.language}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
