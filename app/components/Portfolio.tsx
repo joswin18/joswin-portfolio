@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Menu, X, Github, Linkedin, Mail, ArrowUp, Moon, Sun, Star, GithubIcon, Loader } from 'lucide-react';
+import { Menu, X, Github, Linkedin, Mail, ArrowUp, Moon, Sun, Star, GithubIcon, Loader, FileUser } from 'lucide-react';
 import InteractiveParticleText from './InteractiveParticleText';
 import { fetchGitHubProjects } from '../utils/github';
 
@@ -76,6 +76,7 @@ const Portfolio = () => {
     setError(null);
     fetchGitHubProjects(username)
       .then(({ projects, contributions }) => {
+        console.log('Fetched projects:', projects);
         setGithubProjects(projects);
         setGithubContributions(contributions);
         setIsLoading(false);
@@ -198,8 +199,8 @@ const Portfolio = () => {
         <nav className="fixed top-0 w-full bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm z-50 transition-colors duration-300">
           <div className="max-w-6xl mx-auto px-4 py-4">
             <div className="flex justify-between items-center">
-              <a href="#home" className="text-2xl font-bold">
-                Portfolio
+            <a href="#home" className="text-2xl">
+            <FileUser size={32} className="text-red-500 dark:text-violet-300" />
               </a>
               
               {/* Desktop Navigation */}
@@ -276,7 +277,7 @@ const Portfolio = () => {
 
           {/* About Section */}
           <section id="about" className="min-h-[calc(100vh-400px)] flex items-center py-16">
-            <div className="max-w-4xl mx-auto px-4 space-y-8">
+            <div className="max-w-6xl mx-auto px-4 space-y-8">
               <h2 className="text-4xl font-bold">About Me</h2>
               <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed">
                 I'm a passionate developer with expertise in modern web technologies.
@@ -314,12 +315,14 @@ const Portfolio = () => {
                 </div>
               ) : error ? (
                 <div className="text-red-500 text-center">{error}</div>
-              ) : (
+              ) : githubProjects.length > 0 ? (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {githubProjects.map((project) => (
                     <ProjectCard key={project.id} project={project} />
                   ))}
                 </div>
+              ) : (
+                <p className="text-center text-neutral-600 dark:text-neutral-400">No projects found.</p>
               )}
             </div>
           </section>
@@ -334,12 +337,14 @@ const Portfolio = () => {
                 </div>
               ) : error ? (
                 <div className="text-red-500 text-center">{error}</div>
-              ) : (
+              ) : githubContributions.length > 0 ? (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {githubContributions.map((contribution) => (
                     <ContributionCard key={contribution.id} contribution={contribution} />
                   ))}
                 </div>
+              ) : (
+                <p className="text-center text-neutral-600 dark:text-neutral-400">No contributions found.</p>
               )}
             </div>
           </section>
