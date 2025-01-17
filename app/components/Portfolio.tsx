@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Menu, X, Github, Linkedin, Mail, ArrowUp, Moon, Sun, Star, GithubIcon } from 'lucide-react';
+import { Menu, X, Github, Linkedin, Mail, ArrowUp, Moon, Sun, Star, GithubIcon, Loader } from 'lucide-react';
 import InteractiveParticleText from './InteractiveParticleText';
 import { fetchGitHubProjects } from '../utils/github';
 
@@ -13,14 +13,34 @@ interface GitHubProject {
   stars: number;
   language: string;
   topics: string[];
+  fork: boolean;
+}
+
+interface Contribution {
+  id: number;
+  name: string;
+  description: string;
+  url: string;
+  stars: number;
+  language: string;
+  topics: string[];
+  originalRepo: string;
 }
 
 const Portfolio = () => {
+  useEffect(() => {
+    // This effect runs only on the client, after hydration
+    document.body.removeAttribute('cz-shortcut-listen');
+  }, []);
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isDark, setIsDark] = useState(true);
   const [activeSection, setActiveSection] = useState('home');
   const [githubProjects, setGithubProjects] = useState<GitHubProject[]>([]);
+  const [githubContributions, setGithubContributions] = useState<Contribution[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const headerRef = useRef(null);
   const mainRef = useRef(null);
 
@@ -28,17 +48,16 @@ const Portfolio = () => {
     { id: 'home', label: 'Home' },
     { id: 'about', label: 'About' },
     { id: 'projects', label: 'Projects' },
+    { id: 'contributions', label: 'Contributions' },
     { id: 'contact', label: 'Contact' }
   ];
 
   useEffect(() => {
-    // Check system preference initially
     if (typeof window !== 'undefined') {
       const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       setIsDark(systemPrefersDark);
     }
 
-    // Handle scroll events for scroll-to-top button
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 400);
     };
@@ -48,14 +67,24 @@ const Portfolio = () => {
   }, []);
 
   useEffect(() => {
-    // Apply theme to document
     document.documentElement.classList.toggle('dark', isDark);
   }, [isDark]);
 
   useEffect(() => {
-    // Fetch GitHub projects
     const username = 'joswin18';
-    fetchGitHubProjects(username).then(setGithubProjects);
+    setIsLoading(true);
+    setError(null);
+    fetchGitHubProjects(username)
+      .then(({ projects, contributions }) => {
+        setGithubProjects(projects);
+        setGithubContributions(contributions);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.error('Error fetching GitHub data:', err);
+        setError('Failed to load GitHub data. Please try again later.');
+        setIsLoading(false);
+      });
   }, []);
 
   const scrollToTop = () => {
@@ -69,7 +98,100 @@ const Portfolio = () => {
     setIsDark(!isDark);
   };
 
+  const ProjectCard = ({ project }: { project: GitHubProject }) => (
+    <div
+      key={project.id}
+      className="bg-neutral-100 dark:bg-neutral-900 p-6 rounded-lg hover:shadow-lg transition-all duration-300"
+    >
+      <h3 className="text-xl font-bold mb-2">{project.name}</h3>
+      <p className="text-neutral-600 dark:text-neutral-400 mb-4">{project.description}</p>
+      <div className="flex flex-wrap gap-2 mb-4">
+        {project.topics.map((topic, topicIndex) => (
+          <span
+            key={topicIndex}
+            className="px-2 py-1 bg-red-500/10 text-red-500 dark:bg-violet-500/10 dark:text-violet-500 rounded-full text-sm"
+          >
+            {topic}
+          </span>
+        ))}
+      </div>
+      <div className="flex items-center justify-between mt-4">
+        <a 
+          href={project.url} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="flex items-center text-neutral-700 dark:text-neutral-300 hover:text-red-500 dark:hover:text-violet-500 transition-colors"
+        >
+          <GithubIcon size={20} className="mr-2" />
+          View on GitHub
+        </a>
+        <div className="flex items-center">
+          <Star size={16} className="text-yellow-400 mr-1" />
+          <span className="text-sm font-medium">{project.stars}</span>
+        </div>
+      </div>
+      {project.language && (
+        <div className="mt-4">
+          <h4 className="text-sm font-semibold mb-2">Main Language:</h4>
+          <span className="px-2 py-1 bg-neutral-200 dark:bg-neutral-700 rounded-full text-xs">
+            {project.language}
+          </span>
+        </div>
+      )}
+    </div>
+  );
+
+  const ContributionCard = ({ contribution }: { contribution: Contribution }) => (
+    <div
+      key={contribution.id}
+      className="bg-neutral-100 dark:bg-neutral-900 p-6 rounded-lg hover:shadow-lg transition-all duration-300"
+    >
+      <h3 className="text-xl font-bold mb-2">{contribution.name}</h3>
+      <p className="text-neutral-600 dark:text-neutral-400 mb-4">{contribution.description}</p>
+      <div className="flex flex-wrap gap-2 mb-4">
+        {contribution.topics.map((topic, topicIndex) => (
+          <span
+            key={topicIndex}
+            className="px-2 py-1 bg-red-500/10 text-red-500 dark:bg-violet-500/10 dark:text-violet-500 rounded-full text-sm"
+          >
+            {topic}
+          </span>
+        ))}
+      </div>
+      <div className="flex items-center justify-between mt-4">
+        <a 
+          href={contribution.url} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="flex items-center text-neutral-700 dark:text-neutral-300 hover:text-red-500 dark:hover:text-violet-500 transition-colors"
+        >
+          <GithubIcon size={20} className="mr-2" />
+          View Pull Request
+        </a>
+        <div className="flex items-center">
+          <Star size={16} className="text-yellow-400 mr-1" />
+          <span className="text-sm font-medium">{contribution.stars}</span>
+        </div>
+      </div>
+      {contribution.language && (
+        <div className="mt-4">
+          <h4 className="text-sm font-semibold mb-2">Main Language:</h4>
+          <span className="px-2 py-1 bg-neutral-200 dark:bg-neutral-700 rounded-full text-xs">
+            {contribution.language}
+          </span>
+        </div>
+      )}
+      <div className="mt-4">
+        <h4 className="text-sm font-semibold mb-2">Original Repository:</h4>
+        <span className="text-sm text-neutral-600 dark:text-neutral-400">
+          {contribution.originalRepo}
+        </span>
+      </div>
+    </div>
+  );
+
   return (
+    <>
     <div className={`min-h-screen ${isDark ? 'dark' : ''}`}>
       <div className="min-h-screen bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-50 transition-colors duration-300">
         {/* Navigation */}
@@ -154,7 +276,7 @@ const Portfolio = () => {
 
           {/* About Section */}
           <section id="about" className="min-h-[calc(100vh-400px)] flex items-center py-16">
-            <div className="max-w-6xl mx-auto px-4 space-y-8">
+            <div className="max-w-4xl mx-auto px-4 space-y-8">
               <h2 className="text-4xl font-bold">About Me</h2>
               <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed">
                 I'm a passionate developer with expertise in modern web technologies.
@@ -186,50 +308,39 @@ const Portfolio = () => {
           <section id="projects" className="min-h-screen py-20">
             <div className="max-w-6xl mx-auto px-4">
               <h2 className="text-4xl font-bold mb-12">Projects</h2>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {githubProjects.map((project) => (
-                  <div
-                    key={project.id}
-                    className="bg-neutral-100 dark:bg-neutral-900 p-6 rounded-lg hover:shadow-lg transition-all duration-300"
-                  >
-                    <h3 className="text-xl font-bold mb-2">{project.name}</h3>
-                    <p className="text-neutral-600 dark:text-neutral-400 mb-4">{project.description}</p>
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {project.topics.map((topic, topicIndex) => (
-                        <span
-                          key={topicIndex}
-                          className="px-2 py-1 bg-red-500/10 text-red-500 dark:bg-violet-500/10 dark:text-violet-500 rounded-full text-sm"
-                        >
-                          {topic}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="flex items-center justify-between mt-4">
-                      <a 
-                        href={project.url} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="flex items-center text-neutral-700 dark:text-neutral-300 hover:text-red-500 dark:hover:text-violet-500 transition-colors"
-                      >
-                        <GithubIcon size={20} className="mr-2" />
-                        View on GitHub
-                      </a>
-                      <div className="flex items-center">
-                        <Star size={16} className="text-yellow-400 mr-1" />
-                        <span className="text-sm font-medium">{project.stars}</span>
-                      </div>
-                    </div>
-                    {project.language && (
-                      <div className="mt-4">
-                        <h4 className="text-sm font-semibold mb-2">Main Language:</h4>
-                        <span className="px-2 py-1 bg-neutral-200 dark:bg-neutral-700 rounded-full text-xs">
-                          {project.language}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
+              {isLoading ? (
+                <div className="flex justify-center items-center">
+                  <Loader className="animate-spin" size={48} />
+                </div>
+              ) : error ? (
+                <div className="text-red-500 text-center">{error}</div>
+              ) : (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {githubProjects.map((project) => (
+                    <ProjectCard key={project.id} project={project} />
+                  ))}
+                </div>
+              )}
+            </div>
+          </section>
+
+          {/* Contributions Section */}
+          <section id="contributions" className="min-h-screen py-20">
+            <div className="max-w-6xl mx-auto px-4">
+              <h2 className="text-4xl font-bold mb-12">Contributions</h2>
+              {isLoading ? (
+                <div className="flex justify-center items-center">
+                  <Loader className="animate-spin" size={48} />
+                </div>
+              ) : error ? (
+                <div className="text-red-500 text-center">{error}</div>
+              ) : (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {githubContributions.map((contribution) => (
+                    <ContributionCard key={contribution.id} contribution={contribution} />
+                  ))}
+                </div>
+              )}
             </div>
           </section>
 
@@ -267,6 +378,7 @@ const Portfolio = () => {
         </button>
       </div>
     </div>
+    </>
   );
 };
 
