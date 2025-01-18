@@ -43,8 +43,7 @@ async function fetchContributions(username: string): Promise<Contribution[]> {
   
   const contributions = await Promise.all(
     data.items.slice(0, 10).map(async (item: any) => {
-      const repoUrl = item.repository_url;
-      const repoResponse = await fetch(repoUrl);
+      const repoResponse = await fetch(item.repository_url);
       if (!repoResponse.ok) throw new Error('Failed to fetch repository details');
       const repoData = await repoResponse.json();
       

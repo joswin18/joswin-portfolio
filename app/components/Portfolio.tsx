@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Menu, X, Github, Linkedin, Mail, ArrowUp, Moon, Sun, Star, GithubIcon, Loader, FileUser } from 'lucide-react';
 import InteractiveParticleText from './InteractiveParticleText';
 import { fetchGitHubProjects } from '../utils/github';
@@ -36,13 +36,10 @@ const Portfolio = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isDark, setIsDark] = useState(true);
-  const [activeSection, setActiveSection] = useState('home');
   const [githubProjects, setGithubProjects] = useState<GitHubProject[]>([]);
   const [githubContributions, setGithubContributions] = useState<Contribution[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const headerRef = useRef(null);
-  const mainRef = useRef(null);
 
   const sections = [
     { id: 'home', label: 'Home' },
@@ -199,8 +196,8 @@ const Portfolio = () => {
         <nav className="fixed top-0 w-full bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm z-50 transition-colors duration-300">
           <div className="max-w-6xl mx-auto px-4 py-4">
             <div className="flex justify-between items-center">
-            <a href="#home" className="text-2xl">
-            <FileUser size={32} className="text-red-500 dark:text-violet-300" />
+              <a href="#home" className="text-2xl">
+                <FileUser size={32} className="text-red-500 dark:text-violet-500" />
               </a>
               
               {/* Desktop Navigation */}
@@ -209,9 +206,7 @@ const Portfolio = () => {
                   <a
                     key={section.id}
                     href={`#${section.id}`}
-                    className={`hover:text-red-500 dark:hover:text-violet-500 transition-colors ${
-                      activeSection === section.id ? 'text-red-500 dark:text-violet-500' : ''
-                    }`}
+                    className="hover:text-red-500 dark:hover:text-violet-500 transition-colors"
                   >
                     {section.label}
                   </a>
@@ -277,10 +272,10 @@ const Portfolio = () => {
 
           {/* About Section */}
           <section id="about" className="min-h-[calc(100vh-400px)] flex items-center py-16">
-            <div className="max-w-6xl mx-auto px-4 space-y-8">
+            <div className="max-w-4xl mx-auto px-4 space-y-8">
               <h2 className="text-4xl font-bold">About Me</h2>
               <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                I'm a passionate developer with expertise in modern web technologies.
+                I&apos;m a passionate developer with expertise in modern web technologies.
                 I focus on creating clean, efficient, and user-friendly applications
                 that solve real-world problems.
               </p>
@@ -354,16 +349,16 @@ const Portfolio = () => {
             <div className="max-w-4xl mx-auto px-4 text-center space-y-8">
               <h2 className="text-4xl font-bold">Get in Touch</h2>
               <p className="text-neutral-600 dark:text-neutral-400">
-                I'm always open to new opportunities and collaborations.
+                I&apos;m always open to new opportunities and collaborations.
               </p>
               <div className="flex justify-center space-x-6">
-                <a href="#" className="hover:text-red-500 dark:hover:text-violet-500 transition-colors">
+                <a href="https://github.com/joswin18" className="hover:text-red-500 dark:hover:text-violet-500 transition-colors" target="_blank" rel="noopener noreferrer">
                   <Github size={24} />
                 </a>
-                <a href="#" className="hover:text-red-500 dark:hover:text-violet-500 transition-colors">
+                <a href="https://linkedin.com/in/joswin18" className="hover:text-red-500 dark:hover:text-violet-500 transition-colors" target="_blank" rel="noopener noreferrer">
                   <Linkedin size={24} />
                 </a>
-                <a href="#" className="hover:text-red-500 dark:hover:text-violet-500 transition-colors">
+                <a href="mailto:joswinpsatheesh544@gmail.com" className="hover:text-red-500 dark:hover:text-violet-500 transition-colors">
                   <Mail size={24} />
                 </a>
               </div>

@@ -197,12 +197,10 @@ class ParticleTextEnvironment {
         size.array[i] = this.data.particleSize;
         size.needsUpdate = true;
 
-        let dx = mx - px;
-        let dy = my - py;
-        const dz = mz - pz;
-
+        const dx = mx - px;
+        const dy = my - py;
         const mouseDistance = this.distance(mx, my, px, py);
-        let d = (dx = mx - px) * dx + (dy = my - py) * dy;
+        const d = (dx * dx) + (dy * dy);
         const f = -this.data.area / d;
 
         if (this.buttom) {
@@ -221,7 +219,7 @@ class ParticleTextEnvironment {
           }
         } else {
           if (mouseDistance < this.data.area) {
-            if (i % 5 == 0) {
+            if (i % 5 === 0) {
               const t = Math.atan2(dy, dx);
               px -= 0.03 * Math.cos(t);
               py -= 0.03 * Math.sin(t);
@@ -270,10 +268,10 @@ class ParticleTextEnvironment {
   createText() {
     if (!this.font) return;
 
-    let thePoints: THREE.Vector3[] = [];
+    const thePoints: THREE.Vector3[] = [];
 
-    let shapes = this.font.generateShapes(this.data.text, this.data.textSize);
-    let geometry = new THREE.ShapeGeometry(shapes);
+    const shapes = this.font.generateShapes(this.data.text, this.data.textSize);
+    const geometry = new THREE.ShapeGeometry(shapes);
     geometry.computeBoundingBox();
 
     const xMid = -0.5 * (geometry.boundingBox!.max.x - geometry.boundingBox!.min.x);
@@ -281,30 +279,30 @@ class ParticleTextEnvironment {
 
     geometry.center();
 
-    let holeShapes: THREE.Path[] = [];
+    const holeShapes: THREE.Path[] = [];
 
     for (let q = 0; q < shapes.length; q++) {
-      let shape = shapes[q];
+      const shape = shapes[q];
 
       if (shape.holes && shape.holes.length > 0) {
         for (let j = 0; j < shape.holes.length; j++) {
-          let hole = shape.holes[j];
+          const hole = shape.holes[j];
           holeShapes.push(hole);
         }
       }
     }
-    shapes.push.apply(shapes, holeShapes);
+    shapes.push(...holeShapes);
 
-    let colors: number[] = [];
+    const colors: number[] = [];
     this.colorChange.setHSL(this.isDarkMode ? 0 : 0, 1, this.isDarkMode ? 1 : 0.5);
-    let sizes: number[] = [];
+    const sizes: number[] = [];
 
     for (let x = 0; x < shapes.length; x++) {
-      let shape = shapes[x];
+      const shape = shapes[x];
 
       const amountPoints = (shape.type == 'Path') ? this.data.amount / 2 : this.data.amount;
 
-      let points = shape.getSpacedPoints(amountPoints);
+      const points = shape.getSpacedPoints(amountPoints);
 
       points.forEach((element: THREE.Vector2) => {
         const a = new THREE.Vector3(element.x, element.y, 0);
@@ -314,7 +312,7 @@ class ParticleTextEnvironment {
       });
     }
 
-    let geoParticles = new THREE.BufferGeometry().setFromPoints(thePoints);
+    const geoParticles = new THREE.BufferGeometry().setFromPoints(thePoints);
     geoParticles.translate(xMid, yMid, 0);
 
     geoParticles.setAttribute('customColor', new THREE.Float32BufferAttribute(colors, 3));
