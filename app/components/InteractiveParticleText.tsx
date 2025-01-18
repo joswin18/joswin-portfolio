@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import type { Font } from 'three/examples/jsm/loaders/FontLoader.js';
-// import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
+import type { Shape } from 'three';
 
 interface InteractiveParticleTextProps {
   text: string;
@@ -270,7 +270,6 @@ class ParticleTextEnvironment {
     if (!this.font) return;
 
     const thePoints: THREE.Vector3[] = [];
-
     const shapes = this.font.generateShapes(this.data.text, this.data.textSize);
     const geometry = new THREE.ShapeGeometry(shapes);
     geometry.computeBoundingBox();
@@ -280,29 +279,29 @@ class ParticleTextEnvironment {
 
     geometry.center();
 
-    const holeShapes: THREE.Path[] = [];
+    // Create a new array to hold all shapes including holes
+    const allShapes: Shape[] = [...shapes];
 
+    // Process holes and convert them to shapes
     for (let q = 0; q < shapes.length; q++) {
       const shape = shapes[q];
-
       if (shape.holes && shape.holes.length > 0) {
         for (let j = 0; j < shape.holes.length; j++) {
           const hole = shape.holes[j];
-          holeShapes.push(hole);
+          // Create a new Shape from the hole's points
+          const holeShape = new THREE.Shape(hole.getPoints());
+          allShapes.push(holeShape);
         }
       }
     }
-    shapes.push(...holeShapes);
 
     const colors: number[] = [];
     this.colorChange.setHSL(this.isDarkMode ? 0 : 0, 1, this.isDarkMode ? 1 : 0.5);
     const sizes: number[] = [];
 
-    for (let x = 0; x < shapes.length; x++) {
-      const shape = shapes[x];
-
-      const amountPoints = (shape.type == 'Path') ? this.data.amount / 2 : this.data.amount;
-
+    for (let x = 0; x < allShapes.length; x++) {
+      const shape = allShapes[x];
+      const amountPoints = shape.holes?.length ? this.data.amount / 2 : this.data.amount;
       const points = shape.getSpacedPoints(amountPoints);
 
       points.forEach((element: THREE.Vector2) => {
