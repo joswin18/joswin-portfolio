@@ -2,7 +2,9 @@
 
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
+import type { Font } from 'three/examples/jsm/loaders/FontLoader.js';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 
 interface InteractiveParticleTextProps {
   text: string;
@@ -10,31 +12,31 @@ interface InteractiveParticleTextProps {
 }
 
 const vertexShader = `
-  attribute float size;
-  attribute vec3 customColor;
-  varying vec3 vColor;
+attribute float size;
+attribute vec3 customColor;
+varying vec3 vColor;
 
-  void main() {
-    vColor = customColor;
-    vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-    gl_PointSize = size * ( 300.0 / -mvPosition.z );
-    gl_Position = projectionMatrix * mvPosition;
-  }
+void main() {
+  vColor = customColor;
+  vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+  gl_PointSize = size * ( 300.0 / -mvPosition.z );
+  gl_Position = projectionMatrix * mvPosition;
+}
 `;
 
 const fragmentShader = `
-  uniform vec3 color;
-  uniform sampler2D pointTexture;
-  varying vec3 vColor;
+uniform vec3 color;
+uniform sampler2D pointTexture;
+varying vec3 vColor;
 
-  void main() {
-    gl_FragColor = vec4( color * vColor, 1.0 );
-    gl_FragColor = gl_FragColor * texture2D( pointTexture, gl_PointCoord );
-  }
+void main() {
+  gl_FragColor = vec4( color * vColor, 1.0 );
+  gl_FragColor = gl_FragColor * texture2D( pointTexture, gl_PointCoord );
+}
 `;
 
 class ParticleTextEnvironment {
-  font: THREE.Font | null = null;
+  font: Font | null = null;
   particle: THREE.Texture | null = null;
   container: HTMLElement;
   scene: THREE.Scene;
