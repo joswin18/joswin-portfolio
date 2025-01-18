@@ -17,13 +17,16 @@ const ParticleText: React.FC<ParticleTextProps> = ({ text }) => {
   useEffect(() => {
     if (!containerRef.current) return;
 
+    // Store ref value in a variable to use in cleanup
+    const container = containerRef.current;
+
     // Setup
     const scene = new THREE.Scene();
     sceneRef.current = scene;
 
     const camera = new THREE.PerspectiveCamera(
       75,
-      containerRef.current.clientWidth / containerRef.current.clientHeight,
+      container.clientWidth / container.clientHeight,
       0.1,
       1000
     );
@@ -31,9 +34,9 @@ const ParticleText: React.FC<ParticleTextProps> = ({ text }) => {
     cameraRef.current = camera;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
+    renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setClearColor(0x000000, 0);
-    containerRef.current.appendChild(renderer.domElement);
+    container.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
     // Create particles
@@ -125,8 +128,8 @@ const ParticleText: React.FC<ParticleTextProps> = ({ text }) => {
 
     // Cleanup
     return () => {
-      if (rendererRef.current && containerRef.current) {
-        containerRef.current.removeChild(rendererRef.current.domElement);
+      if (rendererRef.current && container) {
+        container.removeChild(rendererRef.current.domElement);
       }
       if (particlesRef.current) {
         particlesRef.current.geometry.dispose();

@@ -1,3 +1,20 @@
+interface GitHubRepo {
+  id: number;
+  name: string;
+  description: string | null;
+  html_url: string;
+  stargazers_count: number;
+  language: string | null;
+  topics: string[];
+  fork: boolean;
+}
+
+interface GitHubPullRequest {
+  id: number;
+  repository_url: string;
+  html_url: string;
+}
+
 interface GitHubProject {
   id: number;
   name: string;
@@ -23,14 +40,14 @@ interface Contribution {
 async function fetchUserRepos(username: string): Promise<GitHubProject[]> {
   const response = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&direction=desc&per_page=100`);
   if (!response.ok) throw new Error('Failed to fetch user repositories');
-  const data = await response.json();
-  return data.map((repo: any) => ({
+  const data = await response.json() as GitHubRepo[];
+  return data.map((repo) => ({
     id: repo.id,
     name: repo.name,
-    description: repo.description,
+    description: repo.description || '',
     url: repo.html_url,
     stars: repo.stargazers_count,
-    language: repo.language,
+    language: repo.language || '',
     topics: repo.topics || [],
     fork: repo.fork,
   }));
@@ -42,20 +59,20 @@ async function fetchContributions(username: string): Promise<Contribution[]> {
   const data = await response.json();
   
   const contributions = await Promise.all(
-    data.items.slice(0, 10).map(async (item: any) => {
+    data.items.slice(0, 10).map(async (item: GitHubPullRequest) => {
       const repoResponse = await fetch(item.repository_url);
       if (!repoResponse.ok) throw new Error('Failed to fetch repository details');
-      const repoData = await repoResponse.json();
+      const repoData = await repoResponse.json() as GitHubRepo;
       
       return {
         id: item.id,
         name: repoData.name,
-        description: repoData.description,
+        description: repoData.description || '',
         url: item.html_url,
         stars: repoData.stargazers_count,
-        language: repoData.language,
+        language: repoData.language || '',
         topics: repoData.topics || [],
-        originalRepo: repoData.full_name,
+        originalRepo: repoData.name,
       };
     })
   );

@@ -179,7 +179,6 @@ class ParticleTextEnvironment {
 
       const mx = intersects[0].point.x;
       const my = intersects[0].point.y;
-      const mz = intersects[0].point.z;
 
       for (let i = 0, l = pos.count; i < l; i++) {
         const initX = copy.getX(i);
