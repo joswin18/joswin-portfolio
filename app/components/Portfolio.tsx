@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useEffect, useState } from 'react';
-import { Menu, X, Github, Linkedin, Mail, ArrowUp, Moon, Sun, Star, GithubIcon, Loader, FileUser } from 'lucide-react';
+import { Menu,X, Twitter, Github, Linkedin, Mail, ArrowUp, Moon, Sun, Star, GithubIcon, Loader, FileUser } from 'lucide-react';
 import InteractiveParticleText from './InteractiveParticleText';
 import { fetchGitHubProjects } from '../utils/github';
 
@@ -357,6 +357,9 @@ const Portfolio = () => {
                 </a>
                 <a href="https://linkedin.com/in/joswin18" className="hover:text-red-500 dark:hover:text-violet-500 transition-colors" target="_blank" rel="noopener noreferrer">
                   <Linkedin size={24} />
+                </a>
+                <a href="https://x.com/joswinpsatheesh" className="hover:text-red-500 dark:hover:text-violet-500 transition-colors" target="_blank" rel="noopener noreferrer">
+                  <Twitter size={24} />
                 </a>
                 <a href="mailto:joswinpsatheesh544@gmail.com" className="hover:text-red-500 dark:hover:text-violet-500 transition-colors">
                   <Mail size={24} />
